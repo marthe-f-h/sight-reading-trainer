@@ -13,14 +13,25 @@ export const NoteTrainer = ({ clef, note }: NoteTrainerProps) => {
 	useEffect(() => {
 		if (!ref.current) return
 		ref.current.innerHTML = ''
+
+        const scale = 2
+		const width = 120
+		const height = 100
+
 		const renderer = new Renderer(ref.current, Renderer.Backends.SVG)
-		renderer.resize(150, 120)
+		renderer.resize(width * scale, height * scale)
 		const ctx = renderer.getContext()
-		const stave = new Stave(10, 10, 130)
+		ctx.scale(scale, scale)
+
+		const stave = new Stave(10, -10, 100)
 		stave.addClef(clef)
 		stave.setContext(ctx).draw()
-		const staveNote = new StaveNote({ keys: [note], duration: 'q', clef })
-		const voice = new Voice({ numBeats: 1, beatValue: 4 }).addTickables([
+		const staveNote = new StaveNote({
+			keys: [note],
+			duration: 'w',
+			clef
+		})
+		const voice = new Voice({ numBeats: 4, beatValue: 4 }).addTickables([
 			staveNote
 		])
 		new Formatter().joinVoices([voice]).format([voice], 120)
